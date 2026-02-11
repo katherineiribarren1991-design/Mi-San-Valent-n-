@@ -31,14 +31,12 @@
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
         .final-msg { font-size: 1.8rem; color: #d32f2f; font-weight: bold; line-height: 1.4; }
+        #player { display: none; } /* Ocultamos el reproductor de video */
     </style>
 </head>
 <body>
 
-    <audio id="musica" loop>
-        <source src="https://audio.com/david-gomez-1846666436191074/audio/perfect-ed-sheeran" type="audio/mpeg">
-        Tu navegador no soporta el audio.
-    </audio>
+    <div id="player"></div>
 
     <div class="container">
         <h1 id="question">¿Quieres ser mi San Valentín este año? ❤️</h1>
@@ -49,6 +47,25 @@
     </div>
 
     <script>
+        // Cargar la API de YouTube
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: '2Vv-BfVoq4g', // ID de la canción Perfect
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0
+                }
+            });
+        }
+
         function moveButton() {
             const btn = document.getElementById('noBtn');
             const x = Math.random() * (window.innerWidth - btn.offsetWidth);
@@ -59,9 +76,10 @@
         }
 
         function celebrate() {
-            // Reproducir música
-            const audio = document.getElementById('musica');
-            audio.play();
+            // Reproducir la canción al aceptar
+            if (player) {
+                player.playVideo();
+            }
 
             const container = document.querySelector('.container');
             container.innerHTML = `
